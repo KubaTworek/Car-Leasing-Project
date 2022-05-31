@@ -69,7 +69,7 @@ public class CarDataSource extends DataSource {
 
     // READ
     public void selectCars(){
-        String sql = "SELECT DISTINCT Mark, Model, YearProduced, RegistrationNumber, Price  FROM SpecificCar, Car, Model WHERE SpecificCar.idCar = Car.idCar ";
+        String sql = "SELECT DISTINCT Mark, Model, YearProduced, RegistrationNumber, Price, isAvailable  FROM SpecificCar, Car, Model WHERE SpecificCar.idCar = Car.idCar ";
 
         try (Connection conn = super.open();
              Statement stmt  = conn.createStatement();
@@ -80,7 +80,8 @@ public class CarDataSource extends DataSource {
                         rs.getString("Model") +  ", " +
                         rs.getInt("YearProduced") + ", " +
                         rs.getString("RegistrationNumber") + ", " +
-                        rs.getDouble("Price")
+                        (rs.getBoolean("isAvailable") ? rs.getDouble("Price") : "Niedostępny")
+
                 );
             }
         } catch (SQLException e) {
@@ -164,6 +165,81 @@ public class CarDataSource extends DataSource {
             return 0;
         }
     }
+
+    public boolean isExistCar(String registrationNumber){
+        String sql = "SELECT COUNT(idSpecificCar) FROM SpecificCar WHERE RegistrationNumber=?";
+
+        try (Connection conn = super.open();
+             PreparedStatement pstmt  = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1,registrationNumber);
+
+            ResultSet rs  = pstmt.executeQuery();
+
+            return rs.getInt(1) > 0;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean getAvailablity(String registrationNumber){
+        String sql = "SELECT isAvailable FROM SpecificCar WHERE RegistrationNumber = ?";
+
+        try (Connection conn = super.open();
+             PreparedStatement pstmt  = conn.prepareStatement(sql)){
+
+
+            pstmt.setString(1,registrationNumber);
+
+            ResultSet rs  = pstmt.executeQuery();
+
+            return rs.getBoolean("isAvailable");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return true;
+        }
+    }
+
+
+    // UPDATE
+    public void updatePriceCar(String registrationNumber, double newPrice){
+        String sql = "UPDATE SpecificCar SET Price = ? WHERE RegistrationNumber = ?";
+
+        try (Connection conn = super.open();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setDouble(1, newPrice);
+            pstmt.setString(2, registrationNumber);
+            pstmt.executeUpdate();
+            System.out.println("Cena została zatkualizowana");
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void updateAvailability(String registrationNumber){
+        String sql;
+        if(getAvailablity(registrationNumber)){
+            sql = "UPDATE SpecificCar SET isAvailable = 0 WHERE RegistrationNumber = ?";
+        } else {
+            sql = "UPDATE SpecificCar SET isAvailable = 1 WHERE RegistrationNumber = ?";
+        }
+
+
+        try (Connection conn = super.open();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, registrationNumber);
+            pstmt.executeUpdate();
+            System.out.println("Została zmieniona dostępność auta");
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 
     // DELETE
     public void deleteCar(String registrationNumber) {

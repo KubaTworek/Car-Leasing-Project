@@ -34,7 +34,7 @@ public class Management {
         System.out.println("0. Wyjdź.");
         System.out.println("Wybierz operację: ");
 
-            switch(Management.choosing(4)){
+            switch(Management.choosingSwitchInput(4)){
                 case 1 -> clientManagement.startManagement();
                 case 2 -> carManagement.startManagement();
                 //case 3 ->
@@ -44,7 +44,7 @@ public class Management {
         }
     }
 
-    public static int choosing(int max){
+    public static int choosingSwitchInput(int max){
         Scanner scanner = new Scanner(System.in);
         int choose = -1;
         while(choose < 0 || choose > max){
@@ -58,4 +58,50 @@ public class Management {
         }
         return choose;
     }
+
+    public static int choosingIntInput(){
+        Scanner scanner = new Scanner(System.in);
+        int choose = -1;
+        while(choose < 0){
+            try {
+                choose = scanner.nextInt();
+                if(choose < 0) throw new InputMismatchException();
+            } catch (InputMismatchException e) {
+                scanner.nextLine();
+                System.out.println("Podaj prawidłowy numer.");
+            }
+        }
+        return choose;
+    }
+
+    public static double choosingDoubleInput(){
+        Scanner scanner = new Scanner(System.in);
+        double choose = -1;
+        while(choose < 0){
+            try {
+                choose = scanner.nextInt();
+                if(choose < 0) throw new InputMismatchException();
+            } catch (InputMismatchException e) {
+                scanner.nextLine();
+                System.out.println("Podaj prawidłowy numer.");
+            }
+        }
+        return choose;
+    }
+
+    public static String choosingStringInput(){
+        Scanner scanner = new Scanner(System.in);
+        String choose = "";
+        while(choose.trim() == ""){
+            try {
+                choose = scanner.nextLine();
+                if(choose.trim() == "") throw new InputMismatchException();
+            } catch (InputMismatchException e) {
+                scanner.nextLine();
+                System.out.println("Podaj prawidłowy numer.");
+            }
+        }
+        return choose.trim();
+    }
+
 }

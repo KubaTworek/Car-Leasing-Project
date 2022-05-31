@@ -129,6 +129,20 @@ public class ClientDataSource extends DataSource {
         }
     }
 
+    public boolean isExistClient(String nip){
+        String sql = "SELECT COUNT(idClient) FROM Client WHERE NIP=?";
+
+        try (Connection conn = super.open();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            return rs.getInt(1) > 0;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
 
     // UPDATE
 

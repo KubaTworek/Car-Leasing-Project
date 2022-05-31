@@ -16,7 +16,7 @@ public class ClientManagement {
             System.out.println("0. Cofnij.");
             System.out.println("Wybierz operację: ");
 
-            switch (Management.choosing(4)) {
+            switch (Management.choosingSwitchInput(4)) {
                 case 1 -> addClient();
                 case 2 -> showClients();
                 case 3 -> changeClients();
@@ -29,30 +29,27 @@ public class ClientManagement {
     public void addClient(){
         ClientDataSource clientDataSource = new ClientDataSource();
 
-        Scanner scanner = new Scanner(System.in);
         System.out.println("Podaj nazwę firmy: ");
-        String name = scanner.nextLine();
+        String name = Management.choosingStringInput();
         System.out.println("Podaj NIP: ");
-        String nip = scanner.nextLine();
+        String nip = Management.choosingStringInput();
         System.out.println("Podaj maksymalna gotówkę, jaką możesz przeznaczyć na auto: ");
-        double maxCash = scanner.nextDouble();
-        scanner.nextLine();
+        double maxCash = Management.choosingDoubleInput();
         System.out.println("Podaj maksymalna ratę, jaką możesz płacić za auto: ");
-        double maxRate = scanner.nextDouble();
-        scanner.nextLine();
+        double maxRate = Management.choosingDoubleInput();
         int idClient = clientDataSource.getNumberOfClients()+1;
         int idClientFinance = clientDataSource.getNumberOfClientFinances()+1;
         clientDataSource.insertClient(idClient,name,nip,idClientFinance);
         clientDataSource.insertClientFinance(idClientFinance,maxCash,maxRate);
         while(true){
             System.out.println("Podaj imię użytkownika");
-            String userName = scanner.nextLine();
+            String userName = Management.choosingStringInput();
             System.out.println("Podaj nazwisko użytkownika");
-            String userSurname = scanner.nextLine();
+            String userSurname = Management.choosingStringInput();
             System.out.println("Podaj PESEL użytkownika");
-            String userPESEL = scanner.nextLine();
+            String userPESEL = Management.choosingStringInput();
             System.out.println("Czy chcesz zakończyć? (Y/N)");
-            String resp = scanner.nextLine();
+            String resp = Management.choosingStringInput();
             int idUser = clientDataSource.getNumberOfUsers()+1;
             clientDataSource.insertUser(idUser,userName,userSurname,userPESEL,idClient);
             if(resp.equalsIgnoreCase("y")) break;
@@ -63,7 +60,6 @@ public class ClientManagement {
     public void showClients(){
         ClientDataSource clientDataSource = new ClientDataSource();
         clientDataSource.selectClients();
-
     }
 
     public void changeClients(){
@@ -71,12 +67,14 @@ public class ClientManagement {
     }
 
     public void deleteClient(){
-        Scanner scanner = new Scanner(System.in);
         ClientDataSource clientDataSource = new ClientDataSource();
-        clientDataSource.selectClients();
         System.out.println("Wpisz NIP klienta, którego chcesz usunąć: ");
-        String nip = scanner.nextLine();
-        clientDataSource.deleteClient(nip);
+        String nip = Management.choosingStringInput();
+        if(clientDataSource.isExistClient(nip)){
+            clientDataSource.deleteClient(nip);
+        } else {
+            System.out.println("Nie mamy takiego klienta");
+        }
     }
 
 }
