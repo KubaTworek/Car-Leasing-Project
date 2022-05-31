@@ -81,7 +81,6 @@ public class CarDataSource extends DataSource {
                         rs.getInt("YearProduced") + ", " +
                         rs.getString("RegistrationNumber") + ", " +
                         (rs.getBoolean("isAvailable") ? rs.getDouble("Price") : "Niedostępny")
-
                 );
             }
         } catch (SQLException e) {

@@ -16,7 +16,7 @@ public class CarManagement {
 
             switch (Management.choosingSwitchInput(4)) {
                 case 1 -> addCar();
-                case 2 -> showCars()
+                case 2 -> showCars();
                 case 3 -> managementCar();
                 case 4 -> deleteCar();
             }

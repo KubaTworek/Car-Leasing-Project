@@ -87,6 +87,57 @@ public class ClientDataSource extends DataSource {
         }
     }
 
+    public void selectUsers() {
+        String sql = "SELECT DISTINCT UserName, Surname, PESEL, ClientName FROM Users, Client WHERE Users.idClient = Client.idClient ORDER BY ClientName";
+
+        try (Connection conn = super.open();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                System.out.println(rs.getString("ClientName") + ": " +
+                        rs.getString("UserName") + " " +
+                        rs.getString("Surname") + ", PESEL: " +
+                        rs.getString("PESEL"));
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public int selectClientId(String nip){
+        String sql = "SELECT idClient FROM Client WHERE NIP = ?";
+
+        try (Connection conn = super.open();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, nip);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.getInt("idClient");
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return 0;
+    }
+
+    public int selectClientFinanceId(String nip){
+        String sql = "SELECT idClientFinancial FROM Client WHERE NIP = ?";
+
+        try (Connection conn = super.open();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, nip);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.getInt("idClientFinancial");
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return 0;
+    }
+
     public int getNumberOfClients() {
         String sql = "SELECT MAX(idClient) FROM Client";
 
@@ -133,8 +184,26 @@ public class ClientDataSource extends DataSource {
         String sql = "SELECT COUNT(idClient) FROM Client WHERE NIP=?";
 
         try (Connection conn = super.open();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, nip);
+            ResultSet rs = pstmt.executeQuery();
+
+            return rs.getInt(1) > 0;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean isExistUser(String pesel){
+        String sql = "SELECT COUNT(idUser) FROM Users WHERE PESEL=?";
+
+        try (Connection conn = super.open();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, pesel);
+            ResultSet rs = pstmt.executeQuery();
 
             return rs.getInt(1) > 0;
         } catch (SQLException e) {
@@ -145,6 +214,22 @@ public class ClientDataSource extends DataSource {
 
 
     // UPDATE
+    public void updateFinance(int clientFinanceId, double maxCash, double maxRate){
+        String sql = "UPDATE ClientFinance SET maxCash = ?, maxRate = ? WHERE idClientFinancial = ? ";
+
+        try (Connection conn = super.open();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setDouble(1, maxCash);
+            pstmt.setDouble(2, maxRate);
+            pstmt.setInt(3, clientFinanceId);
+            pstmt.executeUpdate();
+            System.out.println("Finanse zostały zaktualizowane");
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
 
     // DELETE
@@ -157,6 +242,21 @@ public class ClientDataSource extends DataSource {
             pstmt.setString(1, nip);
             pstmt.executeUpdate();
             System.out.println("Usunięto klienta z bazy danych.");
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void deleteUser(String pesel) {
+        String sql = "DELETE FROM Users WHERE PESEL = ?";
+
+        try (Connection conn = super.open();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, pesel);
+            pstmt.executeUpdate();
+            System.out.println("Usunięto użytkownika z bazy danych.");
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
