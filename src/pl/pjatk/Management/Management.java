@@ -4,6 +4,8 @@ import pl.pjatk.Car.Car;
 import pl.pjatk.Car.CarDataSource;
 import pl.pjatk.Car.CarManagement;
 import pl.pjatk.Client.Client;
+import pl.pjatk.Client.ClientDataSource;
+import pl.pjatk.Client.ClientManagement;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -16,24 +18,29 @@ public class Management {
 
     public void startManagement(){
         CarDataSource carDataSource = new CarDataSource();
-        carDataSource.createTables();
+        carDataSource.createCarTables();
+        ClientDataSource clientDataSource = new ClientDataSource();
+        clientDataSource.createClientTables();
 
         CarManagement carManagement = new CarManagement();
+        ClientManagement clientManagement = new ClientManagement();
 
+        while(true){
         System.out.println();
-        System.out.println("1. Zarzadzaj klientem");
+        System.out.println("1. Zarzadzaj klientami");
         System.out.println("2. Zarzadzaj samochodami");
         System.out.println("3. Stworz wycenę dla klienta");
         System.out.println("4. Wykonaj leasing");
         System.out.println("0. Wyjdź.");
         System.out.println("Wybierz operację: ");
 
-        switch(Management.choosing(4)){
-            case 1 -> Client.startManagement();
-            case 2 -> carManagement.startManagement();
-            //case 3 ->
-            //case 4 ->
-            case 0 -> System.exit(0);
+            switch(Management.choosing(4)){
+                case 1 -> clientManagement.startManagement();
+                case 2 -> carManagement.startManagement();
+                //case 3 ->
+                //case 4 ->
+                case 0 -> System.exit(0);
+            }
         }
     }
 

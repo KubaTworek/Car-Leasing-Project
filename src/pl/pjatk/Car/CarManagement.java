@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class CarManagement {
     public void startManagement(){
+        while(true) {
         System.out.println();
         System.out.println("1. Dodaj auto");
         System.out.println("2. Wyświetl auta");
@@ -14,15 +15,13 @@ public class CarManagement {
         System.out.println("0. Cofnij.");
         System.out.println("Wybierz operację: ");
 
-        switch(Management.choosing(4)){
-            case 1 -> addCar();
-            case 2 -> showCars();
-            case 3 -> changeCar();
-            case 4 -> deleteCar();
-            case 0 -> {
-                System.out.println("Cofamy");
-                break;
+            switch (Management.choosing(4)) {
+                case 1 -> addCar();
+                case 2 -> showCars();
+                case 3 -> changeCar();
+                case 4 -> deleteCar();
             }
+            break;
         }
     }
 

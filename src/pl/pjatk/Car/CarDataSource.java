@@ -8,7 +8,7 @@ public class CarDataSource extends DataSource {
 
     // TABLES
 
-    public void createTables(){
+    public void createCarTables(){
         try (Connection conn = super.open();
              Statement statement = conn.createStatement()) {
             statement.execute("CREATE TABLE IF NOT EXISTS Car " +

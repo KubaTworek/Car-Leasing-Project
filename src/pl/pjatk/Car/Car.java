@@ -1,7 +1,5 @@
 package pl.pjatk.Car;
 
-import pl.pjatk.Client.Client;
-
 public abstract class Car {
     private int idCar;
     private int yearProduced;

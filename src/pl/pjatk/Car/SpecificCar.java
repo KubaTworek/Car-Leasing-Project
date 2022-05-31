@@ -1,16 +1,16 @@
 package pl.pjatk.Car;
 
 public class SpecificCar extends Car{
-    private int idCar;
+    private int idSpecificCar;
     private String registrationNumber;
     private double price;
     private boolean isAvailable;
 
     // CONSTRUCTOR
 
-    public SpecificCar(int idCar, int yearProduced, CarModel model, int idCar1, String registrationNumber, double price) {
+    public SpecificCar(int idSpecificCar, int yearProduced, CarModel model, int idCar, String registrationNumber, double price) {
         super(idCar, yearProduced, model);
-        this.idCar = idCar1;
+        this.idSpecificCar = idSpecificCar;
         this.registrationNumber = registrationNumber;
         this.price = price;
         this.isAvailable = true;
@@ -18,10 +18,8 @@ public class SpecificCar extends Car{
 
     // GETTERS
 
-
-    @Override
-    public int getIdCar() {
-        return idCar;
+    public int getIdSpecificCar() {
+        return idSpecificCar;
     }
 
     public String getRegistrationNumber() {
@@ -37,9 +35,8 @@ public class SpecificCar extends Car{
 
     // SETTERS
 
-    @Override
-    public void setIdCar(int idCar) {
-        this.idCar = idCar;
+    public void setIdSpecificCar(int idCar) {
+        this.idSpecificCar = idSpecificCar;
     }
 
     public void setRegistrationNumber(String registrationNumber) {
