@@ -138,6 +138,38 @@ public class ClientDataSource extends DataSource {
         return 0;
     }
 
+    public double selectMaxCash(int idClient){
+        String sql = "SELECT maxCash FROM ClientFinance, Client WHERE Client.idClientFinancial = ClientFinance.idClientFinancial AND Client.idClient = ?";
+
+        try (Connection conn = super.open();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idClient);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.getDouble("maxCash");
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return 0;
+    }
+
+    public double selectMaxRate(int idClient){
+        String sql = "SELECT maxRate FROM ClientFinance, Client WHERE Client.idClientFinancial = ClientFinance.idClientFinancial AND Client.idClient = ?";
+
+        try (Connection conn = super.open();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idClient);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.getDouble("maxRate");
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return 0;
+    }
+
     public int getNumberOfClients() {
         String sql = "SELECT MAX(idClient) FROM Client";
 
@@ -234,13 +266,15 @@ public class ClientDataSource extends DataSource {
 
     // DELETE
     public void deleteClient(String nip) {
-        String sql = "DELETE FROM Client WHERE NIP = ?";
+        String sql1 = "DELETE FROM Client WHERE NIP = ?";
 
         try (Connection conn = super.open();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt1 = conn.prepareStatement(sql1)) {
 
-            pstmt.setString(1, nip);
-            pstmt.executeUpdate();
+            deleteUsersFromCompany(selectClientId(nip));
+            pstmt1.setString(1, nip);
+            pstmt1.executeUpdate();
+
             System.out.println("Usunięto klienta z bazy danych.");
 
         } catch (SQLException e) {
@@ -257,6 +291,21 @@ public class ClientDataSource extends DataSource {
             pstmt.setString(1, pesel);
             pstmt.executeUpdate();
             System.out.println("Usunięto użytkownika z bazy danych.");
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void deleteUsersFromCompany(int idClient) {
+        String sql = "DELETE FROM Users WHERE idClient = ?";
+
+        try (Connection conn = super.open();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idClient);
+            pstmt.executeUpdate();
+            System.out.println("Usunięto użytkowników z bazy danych.");
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());

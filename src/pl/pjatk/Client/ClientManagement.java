@@ -3,6 +3,9 @@ package pl.pjatk.Client;
 import pl.pjatk.Car.CarDataSource;
 import pl.pjatk.Management.Management;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 public class ClientManagement {
     public void startManagement() {
@@ -53,8 +56,11 @@ public class ClientManagement {
 
         System.out.println("Podaj nazwę firmy: ");
         String name = Management.choosingStringInput();
-        System.out.println("Podaj NIP: ");
-        String nip = Management.choosingStringInput();
+        String nip = "";
+        while(!(Pattern.matches("^\\d{10}$", nip))) {
+            System.out.println("Podaj prawidłowy NIP: ");
+            nip = Management.choosingStringInput();
+        }
         System.out.println("Podaj maksymalna gotówkę, jaką możesz przeznaczyć na auto: ");
         double maxCash = Management.choosingDoubleInput();
         System.out.println("Podaj maksymalna ratę, jaką możesz płacić za auto: ");
@@ -68,8 +74,11 @@ public class ClientManagement {
             String userName = Management.choosingStringInput();
             System.out.println("Podaj nazwisko użytkownika");
             String userSurname = Management.choosingStringInput();
-            System.out.println("Podaj PESEL użytkownika");
-            String userPESEL = Management.choosingStringInput();
+            String userPESEL = "";
+            while(!(Pattern.matches("^\\d{11}$", userPESEL))) {
+                System.out.println("Podaj prawidłowy PESEL użytkownika");
+                userPESEL = Management.choosingStringInput();
+            }
             System.out.println("Czy chcesz zakończyć? (Y/N)");
             String resp = Management.choosingStringInput();
             int idUser = clientDataSource.getNumberOfUsers() + 1;

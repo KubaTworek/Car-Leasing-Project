@@ -88,6 +88,23 @@ public class CarDataSource extends DataSource {
         }
     }
 
+    public int selectSpecificCarId(String registrationNumber){
+        String sql = "SELECT idSpecificCar FROM SpecificCar WHERE RegistrationNumber=?";
+
+        try (Connection conn = super.open();
+             PreparedStatement pstmt  = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1,registrationNumber);
+
+            ResultSet rs  = pstmt.executeQuery();
+
+            return rs.getInt(1);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return 0;
+        }
+    }
+
     public int selectModelId(String mark, String model){
         String sql = "SELECT idModel FROM Model WHERE Mark = ? AND MODEL = ?";
 
@@ -116,6 +133,22 @@ public class CarDataSource extends DataSource {
             pstmt.setInt(2, idModel);
             ResultSet rs = pstmt.executeQuery();
             return rs.getInt("idCar");
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return 0;
+    }
+
+    public double selectCarPrice(int idSpecificCar){
+        String sql = "SELECT Price FROM SpecificCar WHERE idSpecificCar = ?";
+
+        try (Connection conn = super.open();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idSpecificCar);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.getDouble("Price");
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -241,7 +274,7 @@ public class CarDataSource extends DataSource {
 
 
     // DELETE
-    public void deleteCar(String registrationNumber) {
+    public void deleteSpecificCar(String registrationNumber) {
         String sql = "DELETE FROM SpecificCar WHERE RegistrationNumber = ?";
 
         try (Connection conn = super.open();

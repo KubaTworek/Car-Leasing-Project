@@ -2,6 +2,8 @@ package pl.pjatk.Car;
 
 import pl.pjatk.Management.Management;
 
+import java.util.regex.Pattern;
+
 
 public class CarManagement {
     public void startManagement(){
@@ -51,7 +53,12 @@ public class CarManagement {
         System.out.println("Podaj cenę: ");
         double price = Management.choosingDoubleInput();
         System.out.println("Podaj numer rejestracyjny: ");
-        String registrationNumber = Management.choosingStringInput();
+        String registrationNumber = "";
+        while(!(Pattern.matches("^\\w{2,3} \\S{4,5}$", registrationNumber))) {
+            System.out.println("Podaj prawidłowy numer rejestracyjny auta");
+            registrationNumber = Management.choosingStringInput();
+        }
+
 
         int idSpecificCar = carDataSource.getNumberOfSpecificCars()+1;
         int idModel = carDataSource.selectModelId(mark, model);
@@ -108,7 +115,7 @@ public class CarManagement {
         System.out.println("Wpisz numer rejestracyjny auta, które chcesz usunąć: ");
         String registrationNumber = Management.choosingStringInput();
         if(carDataSource.isExistCar(registrationNumber)){
-            carDataSource.deleteCar(registrationNumber);
+            carDataSource.deleteSpecificCar(registrationNumber);
         } else {
             System.out.println("Nie mamy takiego samochodu");
         }
